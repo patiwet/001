@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>1</title>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14"></script>
+    <style>
+        /* http://meyerweb.com/eric/tools/css/reset/ 
+        v2.0 | 20110126
+        License: none (public domain)
+        */
+
+        html, body, div, span, applet, object, iframe,
+        h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+        a, abbr, acronym, address, big, cite, code,
+        del, dfn, em, img, ins, kbd, q, s, samp,
+        small, strike, strong, sub, sup, tt, var,
+        b, u, i, center,
+        dl, dt, dd, ol, ul, li,
+        fieldset, form, label, legend,
+        table, caption, tbody, tfoot, thead, tr, th, td,
+        article, aside, canvas, details, embed, 
+        figure, figcaption, footer, header, hgroup, 
+        menu, nav, output, ruby, section, summary,
+        time, mark, audio, video {
+            margin: 0;
+            padding: 0;
+            border: 0;
+            font-size: 100%;
+            font: inherit;
+            vertical-align: baseline;
+        }
+        /* HTML5 display-role reset for older browsers */
+        article, aside, details, figcaption, figure, 
+        footer, header, hgroup, menu, nav, section {
+            display: block;
+        }
+        body {
+            line-height: 1;
+        }
+        ol, ul {
+            list-style: none;
+        }
+        blockquote, q {
+            quotes: none;
+        }
+        blockquote:before, blockquote:after,
+        q:before, q:after {
+            content: '';
+            content: none;
+        }
+        table {
+            border-collapse: collapse;
+            border-spacing: 0;
+        }
+    </style>
+</head>
+<body>
+    <div id="app" class="flex-container">
+        <div class="flex-item">
+            <input type="text" v-model="num" @change="onChangeNum" />
+        </div>
+        <div class="flex-item">
+            <select v-model="fun" @change="onChangeFun">
+                <option v-bind:value="'isPrime'">isPrime</option>
+                <option v-bind:value="'isFibonacci'">isFibonacci</option>
+            </select>
+        </div>
+        <div class="flex-item">{{ ans }}</div>
+    </div>
+    <style>
+        .flex-container {
+            display: flex;
+            flex-direction: row;
+            flex-wrap: nowrap;
+            justify-content: flex-start;
+            align-content: stretch;
+            align-items: flex-start;
+        }
+
+        .flex-item:nth-child(1) {
+            background-color: yellow;
+            flex: 0 0 200px;
+        }
+
+        .flex-item:nth-child(2) {
+            background-color: gray;
+            flex: 1 1 auto;
+            min-width: 100px;
+            overflow-x: hidden;
+        }
+
+        .flex-item:nth-child(3) {
+            background-color: green;
+            flex: 0 0 300px;
+        }
+
+        @media (max-width: 600px) {
+            .flex-item:nth-child(2) {
+                overflow-x: auto;
+            }
+        }
+    </style>
+    <script>
+        function parseNum(input) {
+            const numStr = input.match(/-?(\d+)/);
+            if (numStr === null) {
+                return '';
+            }
+
+            const numParsed = parseInt(numStr[0]);
+            if (numParsed < 0) {
+                return '1';
+            }
+
+            return numParsed.toString();
+        }
+
+        function isPrime(num) {
+            for(let i = 2, s = Math.sqrt(num); i <= s; i++)
+                if(num % i === 0) return false; 
+            return num > 1;
+        }
+
+        function isFibonacci(num) {
+            let fibs = [0, 1];
+            do {
+                if (fibs.includes(num)) {
+                    return true;
+                } else if (num < fibs[1]) {
+                    return false;
+                }
+            } while(fibs = [fibs[1], fibs[0] + fibs[1]])
+        }
+
+        const app = new Vue({
+            el: '#app',
+            data: {
+                num: '',
+                fun: 'isPrime',
+                ans: '',
+            },
+            methods: {
+                onChangeNum() {
+                    this.num = parseNum(this.num).toString();
+                    this.ans = this.processAns();
+                },
+                onChangeFun() {
+                    this.ans = this.processAns();
+                },
+                processAns() {
+                    if (this.num == '') {
+                        return '';
+                    } else if (this.fun == 'isPrime') {
+                        return isPrime(parseInt(this.num)).toString();
+                    } else if (this.fun == 'isFibonacci') {
+                        return isFibonacci(parseInt(this.num)).toString();
+                    }
+                },
+            },
+        });
+    </script>
+</body>
+</html>

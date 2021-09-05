@@ -31,4 +31,4 @@ async function getRawHtml() {
     return res.data;
 }
 
-run();
+run().catch(console.error);
